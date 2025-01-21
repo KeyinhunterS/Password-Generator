@@ -13,16 +13,20 @@ function displayHelp() {
         Options:
         --help             Display this help MessageChanne
         --Length=<number>  Specity the length of the password (defualt is 8)
+        --include-numbers  Include numbers in generated password
             
         Example:
         node password-generater.js --length=12
-        Generates a password with 12 characters.
+        Generates a password with 12 characters, including numbers.
     `);
 }
 
 // Function to generate a random password
-function generatePassword(length=8) {
-    const characters = 'abcdefghijklmnopqrstuvwxyz'
+function generatePassword(length=8, includeNumbers = false) {
+    const letters = 'abcdefghijklmnopqrstuvwxyz'
+    const numbers = '0123456789';
+    const characters = includeNumbers ? letters + numbers : letters;
+
     let password = '';
     for (let i = 0; i < length; i++) {
         const randomIndex = Math.floor(Math.random() * characters.length);
@@ -41,8 +45,9 @@ function main() {
         return;
     }
     
-    //Default password length
+    //Default Values
     let length = 8;
+    let includeNumbers = false;
 
     // Handle --length flag
     const lengthArg = args.find(arg => arg.startsWith('--length='));
@@ -55,8 +60,13 @@ function main() {
         length = parseInt(value,10);
     }
 
+    // Handle --include-numbers flag
+    if (args.includes('--include-numbers')) {
+        includeNumbers = true
+    }
+
     // Generate and display the password
-    const password = generatePassword(length);
+    const password = generatePassword(length, includeNumbers);
     console.log(`Generated Password: ${password}`);
 }
 
